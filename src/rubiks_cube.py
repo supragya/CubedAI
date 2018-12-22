@@ -1,16 +1,8 @@
 class rubiks_cube:
-
 	# Init
 	def __init__(self):
-		self.faceslist = (
-							'top',
-							'bottom',
-							'front',
-							'right',
-							'left',
-							'back'
-						 )
-
+		self.faceslist = ('top', 'bottom', 'front', 'right', 'left', 'back')
+		
 		self.ordering = {'up':('back', 'right', 'front', 'left'),
 						'bottom':('front', 'right', 'left', 'back'),
 						'front':('up', 'right', 'bottom', 'left'),
