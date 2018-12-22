@@ -3,13 +3,7 @@ class rubiks_cube:
 	def __init__(self):
 		self.faceslist = ('top', 'bottom', 'front', 'right', 'left', 'back')
 		
-		self.ordering = {'up':('back', 'right', 'front', 'left'),
-						'bottom':('front', 'right', 'left', 'back'),
-						'front':('up', 'right', 'bottom', 'left'),
-						'right':('up', 'back', 'bottom', 'front'),
-						'left':('up', 'front', 'bottom', 'back'),
-						'back':('up', 'left', 'bottom', 'right')
-						}
+		self.ordering = {'up':('back', 'right', 'front', 'left'), 'bottom':('front', 'right', 'left', 'back'), 'front':('up', 'right', 'bottom', 'left'), 'right':('up', 'back', 'bottom', 'front'), 'left':('up', 'front', 'bottom', 'back'), 'back':('up', 'left', 'bottom', 'right')}
 
 		self.stickersize = 1
 		self.inmargin = 0.1
