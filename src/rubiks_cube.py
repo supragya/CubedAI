@@ -9,7 +9,7 @@ class rubiks_cube:
 							'right',
 							'left',
 							'back'
-						)
+						 )
 
 		self.ordering = {'up':('back', 'right', 'front', 'left'),
 						'bottom':('front', 'right', 'left', 'back'),
