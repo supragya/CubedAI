@@ -1,4 +1,5 @@
 import pygame
+import random
 from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -202,6 +203,54 @@ class rubiks_cube:
 		for x in range(12):
 			self.cubeconfig[self.faceslist.index(fourfaces[x//3])][c[x]] = rotatedbuf[x]
 
+	def scramble(self, minmoves = 10, maxmoves = 30):
+		movecount = 0
+		if minmoves > maxmoves:
+			movecount = maxmoves
+		else:
+			movecount = random.randint(minmoves, maxmoves)
+		moves = []
+		for x in range(movecount):
+			y = random.randint(0, 12)
+
+			if y == 0:
+				moves.append('U')
+				self.move_U()
+			elif y == 1:
+				moves.append('UI')
+				self.move_UI()
+			elif y == 2:
+				moves.append('D')
+				self.move_D()
+			elif y == 3:
+				moves.append('DI')
+				self.move_DI()
+			elif y == 4:
+				moves.append('F')
+				self.move_F()
+			elif y == 5:
+				moves.append('FI')
+				self.move_FI()
+			elif y == 6:
+				moves.append('R')
+				self.move_R()
+			elif y == 7:
+				moves.append('RI')
+				self.move_RI()
+			elif y == 8:
+				moves.append('L')
+				self.move_L()
+			elif y == 9:
+				moves.append('LI')
+				self.move_LI()
+			elif y == 10:
+				moves.append('B')
+				self.move_B()
+			elif y == 11:
+				moves.append('BI')
+				self.move_BI()
+		return moves
+
 def showaxis():
 	glBegin(GL_LINES)
 	vertices = ((0, 0, 0),
@@ -229,7 +278,7 @@ if __name__ == '__main__':
 	glRotatef(45, 3, 2.5, 0)
 
 	rb = rubiks_cube()
-	
+	print(rb.scramble())
 	# print(rb.cubeconfig)
 	while True:
 		for event in pygame.event.get():
