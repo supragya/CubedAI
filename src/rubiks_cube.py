@@ -1,3 +1,8 @@
+import pygame
+from pygame.locals import *
+from OpenGL.GL import *
+from OpenGL.GLU import *
+
 class rubiks_cube:
 	# Init
 	def __init__(self):
@@ -73,13 +78,13 @@ class rubiks_cube:
 		self.backface = []
 		self.topface = []
 		self.bottomface = []
-		for point in self.face:
-			self.frontface.append(point[0], point[1], -self.inmargin)
-			self.backface.append(point[0], point[1], self.stickersize*3 + self.inmargin)
-			self.rightface.append(self.stickersize*3 + self.inmargin, point[0], point[1])
-			self.leftface.append(-self.inmargin, point[0], point[1])
-			self.topface.append(point[0], self.stickersize*3 + self.inmargin, point[1])
-			self.bottomface.append(point[0], -self.inmargin, point[1])
+		for point in self.facetemplate:
+			self.frontface.append((point[0], point[1], -self.inmargin))
+			self.backface.append((point[0], point[1], - self.stickersize*3 - self.inmargin))
+			self.rightface.append((self.stickersize*3 + self.inmargin, point[0], -point[1]))
+			self.leftface.append((-self.inmargin, point[0], -point[1]))
+			self.topface.append((point[0], self.stickersize*3 + self.inmargin, -point[1]))
+			self.bottomface.append((point[0], -self.inmargin, -point[1]))
 
 		self.surfaceperface = (
 								(0, 1, 7, 6),
@@ -141,7 +146,42 @@ class rubiks_cube:
 		for x in range(9):
 			fourfaces[x//3][c[x]] = rotatedbuf[x]
 
-	def displaycube():
+	def displaycube(self):
+		glBegin(GL_QUADS)	
+		for surface in self.surfaceperface:
+			for point in surface:
+				glColor3fv(self.colors['inactive'][self.facecolor['bottom']])
+				glVertex3fv(self.bottomface[point])
+		for surface in self.surfaceperface:
+			for point in surface:
+				glColor3fv(self.colors['inactive'][self.facecolor['right']])
+				glVertex3fv(self.rightface[point])
+		for surface in self.surfaceperface:
+			for point in surface:
+				glColor3fv(self.colors['inactive'][self.facecolor['back']])
+				glVertex3fv(self.backface[point])
+		for surface in self.surfaceperface:
+			for point in surface:
+				glColor3fv(self.colors['active'][self.facecolor['front']])
+				glVertex3fv(self.frontface[point])
+		for surface in self.surfaceperface:
+			for point in surface:
+				glColor3fv(self.colors['active'][self.facecolor['left']])
+				glVertex3fv(self.leftface[point])
+		for surface in self.surfaceperface:
+			for point in surface:
+				glColor3fv(self.colors['active'][self.facecolor['top']])
+				glVertex3fv(self.topface[point])
+
+			# x = 0
+			# for vertex in surface:
+			# 	x+=1
+			# 	glColor3fv(colors[x])
+			# 	glVertex3fv(vertices[vertex])
+		glEnd()
+
+
+	def updateddisplay():
 		pass
 
 	# Moves that cube can take
@@ -188,4 +228,26 @@ class rubiks_cube:
 		rotateraroundface('back', -3)
 		updatedisplay()
 
-rb = rubiks_cube()
+if __name__ == '__main__':
+	pygame.init()
+	display = (800,600)
+	pygame.display.set_mode(display, DOUBLEBUF|OPENGL)
+	gluPerspective(45, (display[0]/display[1]), 0.1, 50.0)
+	glTranslatef(-1.5, -1.5, -10)
+	glRotatef(45, 2, 1, 0)
+
+	rb = rubiks_cube()
+
+	while True:
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				pygame.quit()
+				quit()
+		# glRotatef(1, 3, 1, 1) # Rotation matrix
+		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT) # Clearing function
+		rb.displaycube()
+		pygame.display.flip() #updates display
+		pygame.time.wait(10) 
+
+	# Debug code
+	print(rb.frontface)
