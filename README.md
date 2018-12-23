@@ -2,8 +2,10 @@
 PyOpengl based Rubik cube game and its AI
 
 ## Installation procedure
+Use the command `pip install -r requirements.txt` to install the dependencies
 
 ## Running the code
+TBD
 
 ## Cube visualization
 The rubik's cube is visualized in a `pygame` window using `OpenGl`. The cube is represented using faces, surfaces and points.
