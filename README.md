@@ -32,9 +32,9 @@ The surfaces on each of the faces are as follows:****
 - The Up and Down surfaces of the cube are represented as given in **** assuming when you see the Up surface head on from outside the cube, the Back side of the cube is at the top and the Front side is at the bottom of the cube. When you see Down surface head on from outside the cube, you should see the Front surface at the top of the cube and Back surface at the bottom of the cube.
 
 Here are the examples of first 1, first 2 and first 5 surfaces of each face:
-![First surface](https://raw.githubusercontent.com/supragya/CubedAI/blob/master/res/cube_arrangement.png)
-![First 2 surfaces](https://raw.githubusercontent.com/supragya/CubedAI/blob/master/res/cube_1_2.png)
-![First 5 surfaces](https://raw.githubusercontent.com/supragya/CubedAI/blob/master/res/cube_1_5.png)
+![First surface](https://github.com/supragya/CubedAI/raw/master/res/cube_arrangement.png)
+![First 2 surfaces](https://github.com/supragya/CubedAI/raw/master/res/cube_1_2.png)
+![First 5 surfaces](https://github.com/supragya/CubedAI/raw/master/res/1cube_1_5.png)
 
 
 ## Moving the cube
