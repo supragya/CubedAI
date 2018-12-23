@@ -34,7 +34,7 @@ The surfaces on each of the faces are as follows:****
 Here are the examples of first 1, first 2 and first 5 surfaces of each face:
 ![First surface](https://github.com/supragya/CubedAI/raw/master/res/cube_arrangement.png)
 ![First 2 surfaces](https://github.com/supragya/CubedAI/raw/master/res/cube_1_2.png)
-![First 5 surfaces](https://github.com/supragya/CubedAI/raw/master/res/1cube_1_5.png)
+![First 5 surfaces](https://github.com/supragya/CubedAI/raw/master/res/cube_1_5.png)
 
 
 ## Moving the cube
