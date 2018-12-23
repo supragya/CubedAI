@@ -44,7 +44,7 @@ class rubiks_cube:
 							'back': [8, 7, 6, 6, 3, 0, 2, 1, 0, 2, 5, 8]}
 
 		self.stickersize = 1
-		self.inmargin = 0.1
+		self.inmargin = 0.08
 
 		self.facetemplate = []
 		for i in range(6):
@@ -80,21 +80,21 @@ class rubiks_cube:
 		topface = []
 		bottomface = []
 		for point in self.facetemplate:
-			frontface.append((point[0], point[1], -self.inmargin))
-			backface.append((point[0], point[1], - self.stickersize*3 - self.inmargin))
+			frontface.append((point[1], point[0], -self.inmargin))
+			backface.append((-point[1] + self.stickersize*3, point[0], - self.stickersize*3 - self.inmargin))
 			rightface.append((self.stickersize*3 + self.inmargin, point[0], -point[1]))
-			leftface.append((-self.inmargin, point[0], -point[1]))
-			topface.append((point[0], self.stickersize*3 + self.inmargin, -point[1]))
-			bottomface.append((point[0], -self.inmargin, -point[1]))
+			leftface.append((-self.inmargin, point[0], point[1] - self.stickersize*3))
+			topface.append((point[1], self.stickersize*3 + self.inmargin, -point[0]))
+			bottomface.append((point[1], -self.inmargin, -point[0]))
 		# Alert: self.facepoints is depended on self.faceslist config
 		self.facepoints = [topface, bottomface, frontface, rightface, leftface, backface]
 
 		self.surfaceperface = (
 								(0, 1, 7, 6),
-								# (2, 3, 9, 8),
-								# (4, 5, 11, 10),
-								# (12, 13, 19, 18),
-								# (14, 15, 21, 20),
+								(2, 3, 9, 8),
+								(4, 5, 11, 10),
+								(12, 13, 19, 18),
+								(14, 15, 21, 20),
 								# (16, 17, 23, 22),
 								# (24, 25, 31, 30),
 								# (26, 27, 33, 32),
@@ -160,42 +160,42 @@ class rubiks_cube:
 	def move_toc(self):
 		self.rotateronface('top', 2)
 		self.rotateraroundface('top', 3)
-	def move_toa(self):
-		rotateronface('top', -2)
-		rotateraroundface('top', -3)
-		updatedisplay()
-	def move_boc(self):
-		rotateronface('bottom', 2)
-		rotateraroundface('bottom', 3)
-		updatedisplay()
-	def move_boa(self):
-		rotateronface('bottom', -2)
-		rotateraroundface('bottom', -3)
-		updatedisplay()
-	def move_lec(self):
-		rotateronface('left', 2)
-		rotateraroundface('left', 3)
-		updatedisplay()
-	def move_lea(self):
-		rotateronface('left', -2)
-		rotateraroundface('left', -3)
-		updatedisplay()
-	def move_ric(self):
-		rotateronface('right', 2)
-		rotateraroundface('right', 3)
-		updatedisplay()
-	def move_ria(self):
-		rotateronface('right', -2)
-		rotateraroundface('right', -3)
-		updatedisplay()
-	def move_bac(self):
-		rotateronface('back', 2)
-		rotateraroundface('back', 3)
-		updatedisplay()
-	def move_baa(self):
-		rotateronface('back', -2)
-		rotateraroundface('back', -3)
-		updatedisplay()
+	# def move_toa(self):
+	# 	rotateronface('top', -2)
+	# 	rotateraroundface('top', -3)
+	# 	updatedisplay()
+	# def move_boc(self):
+	# 	rotateronface('bottom', 2)
+	# 	rotateraroundface('bottom', 3)
+	# 	updatedisplay()
+	# def move_boa(self):
+	# 	rotateronface('bottom', -2)
+	# 	rotateraroundface('bottom', -3)
+	# 	updatedisplay()
+	# def move_lec(self):
+	# 	rotateronface('left', 2)
+	# 	rotateraroundface('left', 3)
+	# 	updatedisplay()
+	# def move_lea(self):
+	# 	rotateronface('left', -2)
+	# 	rotateraroundface('left', -3)
+	# 	updatedisplay()
+	# def move_ric(self):
+	# 	rotateronface('right', 2)
+	# 	rotateraroundface('right', 3)
+	# 	updatedisplay()
+	# def move_ria(self):
+	# 	rotateronface('right', -2)
+	# 	rotateraroundface('right', -3)
+	# 	updatedisplay()
+	# def move_bac(self):
+	# 	rotateronface('back', 2)
+	# 	rotateraroundface('back', 3)
+	# 	updatedisplay()
+	# def move_baa(self):
+	# 	rotateronface('back', -2)
+	# 	rotateraroundface('back', -3)
+	# 	updatedisplay()
 
 	def rotateronface(self, face, offset):
 		c = self.cubeconfig[self.faceslist.index(face)]
@@ -210,6 +210,7 @@ class rubiks_cube:
 
 	def rotateraroundface(self, face, offset):
 		fourfaces = self.ordering[face]
+		print(fourfaces)
 		buf = []
 		c = self.faceneighbors[face]
 		buf = [fourfaces[x//3][c[x]] for x in range(9)]
@@ -217,6 +218,23 @@ class rubiks_cube:
 		for x in range(9):
 			fourfaces[x//3][c[x]] = rotatedbuf[x]
 
+def showaxis():
+	glBegin(GL_LINES)
+	vertices = ((0, 0, 0),
+				(3, 0, 0),
+				(0, 3, 0),
+				(0, 0, 3))
+	edges = ((0, 1),
+			(0, 2),
+			(0, 3))
+	axiscolors = ((1, 0, 0),
+					(0, 1, 0),
+					(0, 0, 1))
+	for x in range(3):
+		glColor3fv(axiscolors[x])
+		for vertex in edges[x]:
+			glVertex3fv(vertices[vertex])
+	glEnd()
 
 if __name__ == '__main__':
 	pygame.init()
@@ -236,6 +254,7 @@ if __name__ == '__main__':
 		# glRotatef(1, 3, 1, 1) # Rotation matrix
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT) # Clearing function
 		rb.displaycube()
+		# showaxis()
 		pygame.display.flip() #updates display
 		pygame.time.wait(10) 
 
