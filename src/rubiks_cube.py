@@ -8,6 +8,7 @@ class rubiks_cube:
 	def __init__(self):
 		self.faceslist = ('top', 'bottom', 'front', 'right', 'left', 'back')
 		# From now, top is face 0, bottom is face 1 and so on
+		# DO NOT CHANGE THE ORDER OF FACESLIST, CODE MAY BREAK
 
 		self.facecolor = {'top' : 'white',
 							'front': 'green',
@@ -72,34 +73,36 @@ class rubiks_cube:
 		# ...
 		# ...
 		# 0   1   2   3   4   5
-		self.frontface = []
-		self.rightface = []
-		self.leftface = []
-		self.backface = []
-		self.topface = []
-		self.bottomface = []
+		frontface = []
+		rightface = []
+		leftface = []
+		backface = []
+		topface = []
+		bottomface = []
 		for point in self.facetemplate:
-			self.frontface.append((point[0], point[1], -self.inmargin))
-			self.backface.append((point[0], point[1], - self.stickersize*3 - self.inmargin))
-			self.rightface.append((self.stickersize*3 + self.inmargin, point[0], -point[1]))
-			self.leftface.append((-self.inmargin, point[0], -point[1]))
-			self.topface.append((point[0], self.stickersize*3 + self.inmargin, -point[1]))
-			self.bottomface.append((point[0], -self.inmargin, -point[1]))
+			frontface.append((point[0], point[1], -self.inmargin))
+			backface.append((point[0], point[1], - self.stickersize*3 - self.inmargin))
+			rightface.append((self.stickersize*3 + self.inmargin, point[0], -point[1]))
+			leftface.append((-self.inmargin, point[0], -point[1]))
+			topface.append((point[0], self.stickersize*3 + self.inmargin, -point[1]))
+			bottomface.append((point[0], -self.inmargin, -point[1]))
+		# Alert: self.facepoints is depended on self.faceslist config
+		self.facepoints = [topface, bottomface, frontface, rightface, leftface, backface]
 
 		self.surfaceperface = (
 								(0, 1, 7, 6),
-								(2, 3, 9, 8),
-								(4, 5, 11, 10),
-								(12, 13, 19, 18),
-								(14, 15, 21, 20),
-								(16, 17, 23, 22),
-								(24, 25, 31, 30),
-								(26, 27, 33, 32),
-								(28, 29, 35, 34)
+								# (2, 3, 9, 8),
+								# (4, 5, 11, 10),
+								# (12, 13, 19, 18),
+								# (14, 15, 21, 20),
+								# (16, 17, 23, 22),
+								# (24, 25, 31, 30),
+								# (26, 27, 33, 32),
+								# (28, 29, 35, 34)
 								)
 
 		# We call all those faces active which look towards the camera
-		colorloss = 0.15 
+		colorloss = 0.45 
 		self.colors = {'active':
 							{'red': (1, 0, 0),
 							'blue': (0, 0, 1),
@@ -126,71 +129,37 @@ class rubiks_cube:
 				cubeface.append(self.facecolor[face])
 			self.cubeconfig.append(cubeface)
 	
-	def rotateronface(face, offset):
-		c = self.cubeconfig[self.faceslist.index(face)]
-		rimpoints = [0, 1, 2, 5, 8, 7, 6, 3]
-		buf = [c[x] for x in rimpoints]
-		rotatedbuf = [buf[(x + offset)%8] for x in range(8)]
-		x = 0
-		for y in rimpoints:
-			c[y] = rotatedbuf[x]
-			x += 1
-		self.cubeconfig[self.faceslist.index(face)] = c
-
-	def rotateraroundface(face, offset):
-		fourfaces = self.ordering[face]
-		buf = []
-		c = self.faceneighbors[face]
-		buf = [fourfaces[x//3][c[x]] for x in range(9)]
-		rotatedbuf = [buf[(x + offset)%9] for x in range(9)]
-		for x in range(9):
-			fourfaces[x//3][c[x]] = rotatedbuf[x]
-
 	def displaycube(self):
-		glBegin(GL_QUADS)	
-		for surface in self.surfaceperface:
-			for point in surface:
-				glColor3fv(self.colors['inactive'][self.facecolor['bottom']])
-				glVertex3fv(self.bottomface[point])
-		for surface in self.surfaceperface:
-			for point in surface:
-				glColor3fv(self.colors['inactive'][self.facecolor['right']])
-				glVertex3fv(self.rightface[point])
-		for surface in self.surfaceperface:
-			for point in surface:
-				glColor3fv(self.colors['inactive'][self.facecolor['back']])
-				glVertex3fv(self.backface[point])
-		for surface in self.surfaceperface:
-			for point in surface:
-				glColor3fv(self.colors['active'][self.facecolor['front']])
-				glVertex3fv(self.frontface[point])
-		for surface in self.surfaceperface:
-			for point in surface:
-				glColor3fv(self.colors['active'][self.facecolor['left']])
-				glVertex3fv(self.leftface[point])
-		for surface in self.surfaceperface:
-			for point in surface:
-				glColor3fv(self.colors['active'][self.facecolor['top']])
-				glVertex3fv(self.topface[point])
+		glBegin(GL_QUADS)
+		activityflag = [1, 0, 1, 0, 1, 0]
 
-			# x = 0
-			# for vertex in surface:
-			# 	x+=1
-			# 	glColor3fv(colors[x])
-			# 	glVertex3fv(vertices[vertex])
+		# First render the inactive faces
+		for x in range(6):
+			if activityflag[x] == 0:
+				y = 0
+				for surface in self.surfaceperface:
+					for point in surface:
+						glColor3fv(self.colors['inactive'][self.cubeconfig[x][y]])
+						glVertex3fv(self.facepoints[x][point])
+				y += 1
+		# Second, render the active faces
+		for x in range(6):
+			if activityflag[x] == 1:
+				y = 0
+				for surface in self.surfaceperface:
+					for point in surface:
+						glColor3fv(self.colors['active'][self.cubeconfig[x][y]])
+						glVertex3fv(self.facepoints[x][point])
+				y += 1
+
 		glEnd()
-
-
-	def updateddisplay():
-		pass
 
 	# Moves that cube can take
 	# move_xxy means to rotate face x once in direction of y
 	# e.g. move_toc means rotate topface once in clockwise direction
 	def move_toc(self):
-		rotateronface('top', 2)
-		rotateraroundface('top', 3)
-		updatedisplay()
+		self.rotateronface('top', 2)
+		self.rotateraroundface('top', 3)
 	def move_toa(self):
 		rotateronface('top', -2)
 		rotateraroundface('top', -3)
@@ -228,6 +197,27 @@ class rubiks_cube:
 		rotateraroundface('back', -3)
 		updatedisplay()
 
+	def rotateronface(self, face, offset):
+		c = self.cubeconfig[self.faceslist.index(face)]
+		rimpoints = [0, 1, 2, 5, 8, 7, 6, 3]
+		buf = [c[x] for x in rimpoints]
+		rotatedbuf = [buf[(x + offset)%8] for x in range(8)]
+		x = 0
+		for y in rimpoints:
+			c[y] = rotatedbuf[x]
+			x += 1
+		self.cubeconfig[self.faceslist.index(face)] = c
+
+	def rotateraroundface(self, face, offset):
+		fourfaces = self.ordering[face]
+		buf = []
+		c = self.faceneighbors[face]
+		buf = [fourfaces[x//3][c[x]] for x in range(9)]
+		rotatedbuf = [buf[(x + offset)%9] for x in range(9)]
+		for x in range(9):
+			fourfaces[x//3][c[x]] = rotatedbuf[x]
+
+
 if __name__ == '__main__':
 	pygame.init()
 	display = (800,600)
@@ -237,7 +227,7 @@ if __name__ == '__main__':
 	glRotatef(45, 2, 1, 0)
 
 	rb = rubiks_cube()
-
+	# rb.move_toc();
 	while True:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
