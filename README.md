@@ -8,6 +8,7 @@ Use the command `pip install -r requirements.txt` to install the dependencies
 TBD
 
 ## Cube visualization
+![Full Cube](https://github.com/supragya/CubedAI/raw/master/res/rubiks_cube.png)
 The rubik's cube is visualized in a `pygame` window using `OpenGl`. The cube is represented using faces, surfaces and points.
 **Face**: The cube has 6 faces, namely up, down, front, back, right and left
 **Surfaces**: The cube has stickers consisting of points. Each face looks as follows  (in terms of points):
